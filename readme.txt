@@ -4,7 +4,7 @@ Donate link: https://pablodiloreto.com/hola-simpsons/
 Tags: los-simpsons, the-simpsons, quotes, frases, hola-simpsons
 Requires at least: 5.1.2
 Tested up to: 6.9.4
-Stable tag: 1.3
+Stable tag: 1.3.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -50,7 +50,7 @@ If you have been impressed with this plugin and would like to somehow show some 
 
 == Screenshots ==
  
-1. Example quota from the plugin, in the admin area.
+1. Example quote from the plugin, in the admin area.
 
 
 == Upgrade Notice ==
@@ -84,6 +84,9 @@ WordPress SVN upgrade testing.
 Initial source code.
 
 == Changelog ==
+
+= 1.3.1 (2026-04-28) =
+* Typo fix in screenshot caption ("quota" → "quote").
 
 = 1.3 (2026-04-22) =
 * Added several new classic quotes from 'The Simpsons'.
