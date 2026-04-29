@@ -4,7 +4,7 @@ Donate link: https://pablodiloreto.com/hola-simpsons/
 Tags: los-simpsons, the-simpsons, quotes, frases, hola-simpsons
 Requires at least: 5.1.2
 Tested up to: 6.9.4
-Stable tag: 1.3.1
+Stable tag: 1.3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -15,7 +15,7 @@ The best quotes from 'The Simpsons' in your WordPress Admin area.
 
 'Hola Simpsons' is a plugin that show quotes from 'Los Simpsons' in your admin area, in spanish. For each refresh, you will find at the top of the admin-area a quote from any character in the series.
 
-Por ahora el plugin tiene frases solo en español.
+Now with iconic quotes from the original English, Spain (es_ES), Brazilian Portuguese (pt_BR) and Italian (it_IT) dubs of the show, in addition to the original Latin American Spanish dub. The plugin auto-selects the right set based on the user's WordPress locale (e.g. en_GB → English, pt_PT → Brazilian Portuguese, es_AR/es_MX → LATAM Spanish). Languages without a curated set fall back to LATAM Spanish.
 
 == Installation ==
 
@@ -38,7 +38,7 @@ No. Currently these actions cannot be performed. We have plans that you can cust
 
 = In which languages will the quotes be displayed? =
 
-Only in Spanish (at the moment). We have plans that are also displayed in English (and you can configure this) in future versions.
+The plugin auto-selects the quote set based on your WordPress user locale. Currently supported sets: Latin American Spanish (default and fallback), European Spanish (es_ES), Brazilian Portuguese (pt_BR), Italian (it_IT) and original English (en_US). Variants like en_GB or pt_PT fall back to en_US and pt_BR respectively. Locales with no curated set fall back to LATAM Spanish.
 
 = Does this plugin connect to any external web service? =
 
@@ -54,6 +54,9 @@ If you have been impressed with this plugin and would like to somehow show some 
 
 
 == Upgrade Notice ==
+
+= 1.3.2 =
+* Added iconic quotes in 4 additional dubs (English, Spain, Brazilian Portuguese, Italian) with automatic locale-based selection.
 
 = 1.3 =
 * New classic quotes from 'The Simpsons' added.
@@ -84,6 +87,11 @@ WordPress SVN upgrade testing.
 Initial source code.
 
 == Changelog ==
+
+= 1.3.2 (2026-04-28) =
+* Added iconic quote sets from the original English, European Spanish, Brazilian Portuguese, and Italian dubs of The Simpsons.
+* New locale-aware quote selection: the plugin picks the quote set based on the user's WordPress locale, with fallback by language family (e.g. en_GB → en_US, pt_PT → pt_BR) and a final fallback to Latin American Spanish.
+* Refactored quote storage and selection into dedicated functions; output uses the proper `lang` attribute when the quote language differs from the user's UI language.
 
 = 1.3.1 (2026-04-28) =
 * Typo fix in screenshot caption ("quota" → "quote").
