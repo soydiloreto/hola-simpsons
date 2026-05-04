@@ -7,12 +7,18 @@
  * Version: 1.3.2
  * Requires at least: 5.1.2
  * Requires PHP: 7.0
- * Tested up to: 6.9.4
+ * Tested up to: 6.9
  * Author URI: https://pablodiloreto.com/hola-simpsons/
  * Text Domain: hola-simpsons
+ * License: GPLv2 or later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  *
  * @package HolaSimpsons
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * Curated quote sets keyed by WordPress locale.

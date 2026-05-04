@@ -3,7 +3,7 @@ Contributors: pablodiloreto
 Donate link: https://pablodiloreto.com/hola-simpsons/
 Tags: los-simpsons, the-simpsons, quotes, frases, hola-simpsons
 Requires at least: 5.1.2
-Tested up to: 6.9.4
+Tested up to: 6.9
 Stable tag: 1.3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
