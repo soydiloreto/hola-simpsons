@@ -1,21 +1,39 @@
 <?php
-/*
-Plugin Name: Hola Simpsons
-Plugin URI: https://pablodiloreto.com/hola-simpsons/
-Description: The best quotes from 'The Simpsons' in your WordPress Admin area. Las mejores frases de 'Los Simspons' en tu administrador de WordPress.
-Author: Pablo Ariel Di Loreto
-Version: 1.3.2
-Requires at least: 5.1.2
-Requires PHP: 7.0
-Tested up to: 6.9.4
-Author URI: https://pablodiloreto.com/hola-simpsons/
-Text Domain: hola-simpsons
-*/
+/**
+ * Plugin Name: Hola Simpsons
+ * Plugin URI: https://pablodiloreto.com/hola-simpsons/
+ * Description: The best quotes from 'The Simpsons' in your WordPress Admin area. Las mejores frases de 'Los Simspons' en tu administrador de WordPress.
+ * Author: Pablo Ariel Di Loreto
+ * Version: 1.3.2
+ * Requires at least: 5.1.2
+ * Requires PHP: 7.0
+ * Tested up to: 6.9
+ * Author URI: https://pablodiloreto.com/hola-simpsons/
+ * Text Domain: hola-simpsons
+ * License: GPLv2 or later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
+ *
+ * @package HolaSimpsons
+ */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
+ * Curated quote sets keyed by WordPress locale.
+ *
+ * Each value is a newline-separated block of quotes; the renderer
+ * splits on "\n" and picks one at random. Locales currently covered:
+ * Latin American Spanish (default and fallback), original English,
+ * European Spanish, Brazilian Portuguese, and Italian.
+ *
+ * @return array<string, string> Locale-key => quote-block map.
+ */
 function hola_simpsons_quotes_data() {
 	return array(
 		// Español neutro / LATAM (default).
-		'es' => "No hay nada mejor que la cerveza para darle a uno esa falsa sensación de bienestar (Homero)
+		'es'    => 'No hay nada mejor que la cerveza para darle a uno esa falsa sensación de bienestar (Homero)
 Si ambicionas poco, nadie te estorbará (Marge)
 Marge, este matrimonio es una sociedad: cuando caes, yo te levanto, y cuando no puedes terminar un sandwich… yo me como ese sandwich (Homero)
 ¿Cuál es el motivo para ir? Vamos a terminar de nuevo aquí de todos modos (Homero)
@@ -55,7 +73,7 @@ Si no te gusta tu trabajo no haces huelga, vas cada día y lo haces muy mal. Ese
 El alcohol: la causa y solución a todos los problemas de la vida (Homero)
 Todo me sale Milhouse (Milhouse)
 Hola-holita, vecinito (Flanders)
-Pero Dios es mi personaje favorito de la Biblia (Homero)",
+Pero Dios es mi personaje favorito de la Biblia (Homero)',
 
 		// Original English. High-confidence iconic quotes from the show.
 		'en_US' => "D'oh! (Homer)
@@ -85,7 +103,7 @@ Me fail English? That's unpossible! (Ralph)
 My cat's breath smells like cat food. (Ralph)",
 
 		// Spain dub (es_ES). En España es 'Homer', no 'Homero', y muchas frases tienen su propia versión.
-		'es_ES' => "¡Mosquis! (Homer)
+		'es_ES' => '¡Mosquis! (Homer)
 ¡Multiplícate por cero! (Bart)
 ¡Cómete mis pantalones! (Bart)
 ¡Ay, caramba! (Bart)
@@ -100,7 +118,7 @@ El alcohol: la causa de, y solución a, todos los problemas de la vida. (Homer)
 Intentar es el primer paso para el fracaso. (Homer)
 En esta casa obedecemos las leyes de la termodinámica. (Homer)
 Suelta a los perros. (Sr. Burns)
-¡Ja, ja! (Nelson)",
+¡Ja, ja! (Nelson)',
 
 		// Brazilian Portuguese dub (pt_BR). 'Os Simpsons' has a strong dub tradition in Brazil.
 		'pt_BR' => "D'oh! (Homer)
@@ -138,6 +156,17 @@ Ah-ah! (Nelson)",
 	);
 }
 
+/**
+ * Pick the closest matching quote-set key for a given WP user locale.
+ *
+ * Tries an exact match first (e.g. `es_ES` => `es_ES`), then collapses
+ * to a two-letter language match (`es_AR` => `es`), then scans for any
+ * key whose two-letter prefix matches (`pt_PT` => `pt_BR`). Falls back
+ * to `es` (LATAM Spanish) if nothing matches.
+ *
+ * @param string $user_locale WordPress user locale, e.g. `en_GB`.
+ * @return string A key present in hola_simpsons_quotes_data().
+ */
 function hola_simpsons_pick_locale( $user_locale ) {
 	$data = hola_simpsons_quotes_data();
 
@@ -160,6 +189,15 @@ function hola_simpsons_pick_locale( $user_locale ) {
 	return 'es';
 }
 
+/**
+ * Pick one random quote from the set matching the current user's locale.
+ *
+ * Returns the texturised quote text alongside the locale key it was
+ * pulled from, so the renderer can emit a proper `lang` attribute when
+ * the quote language differs from the UI language.
+ *
+ * @return array{text: string, lang: string} Quote text + locale key.
+ */
 function hola_simpsons_get_quotes() {
 	$locale       = get_user_locale();
 	$picked       = hola_simpsons_pick_locale( $locale );
@@ -168,7 +206,7 @@ function hola_simpsons_get_quotes() {
 
 	$quotes = explode( "\n", $quotes_block );
 
-	$chosen = $quotes[ mt_rand( 0, count( $quotes ) - 1 ) ];
+	$chosen = $quotes[ wp_rand( 0, count( $quotes ) - 1 ) ];
 
 	return array(
 		'text' => wptexturize( $chosen ),
@@ -176,28 +214,51 @@ function hola_simpsons_get_quotes() {
 	);
 }
 
+/**
+ * Render the random quote inside an `admin_notices`-hooked paragraph.
+ *
+ * Output is fully escaped: the screen-reader label uses esc_html__,
+ * the optional lang attribute uses esc_attr, and the quote body
+ * (sourced from the in-file constant array, never user input) goes
+ * through esc_html after wptexturize so any future contribution to
+ * the quote sets cannot smuggle markup into the admin chrome.
+ *
+ * @return void
+ */
 function hola_simpsons() {
-	$result        = hola_simpsons_get_quotes();
-	$quote_text    = $result['text'];
-	$quote_locale  = $result['lang'];
-	$quote_lang    = substr( $quote_locale, 0, 2 );
-	$user_lang     = substr( get_user_locale(), 0, 2 );
+	$result       = hola_simpsons_get_quotes();
+	$quote_text   = $result['text'];
+	$quote_locale = $result['lang'];
+	$quote_lang   = substr( $quote_locale, 0, 2 );
+	$user_lang    = substr( get_user_locale(), 0, 2 );
 
-	$lang_attr = '';
 	if ( $user_lang !== $quote_lang ) {
-		$lang_attr = ' lang="' . esc_attr( $quote_lang ) . '"';
+		printf(
+			'<p id="simpsons"><span class="screen-reader-text">%s </span><span dir="ltr" lang="%s">%s</span></p>',
+			esc_html__( 'Quote from The Simpsons:', 'hola-simpsons' ),
+			esc_attr( $quote_lang ),
+			esc_html( $quote_text )
+		);
+	} else {
+		printf(
+			'<p id="simpsons"><span class="screen-reader-text">%s </span><span dir="ltr">%s</span></p>',
+			esc_html__( 'Quote from The Simpsons:', 'hola-simpsons' ),
+			esc_html( $quote_text )
+		);
 	}
-
-	printf(
-		'<p id="simpsons"><span class="screen-reader-text">%s </span><span dir="ltr"%s>%s</span></p>',
-		esc_html__( 'Quote from The Simpsons:', 'hola-simpsons' ),
-		$lang_attr,
-		$quote_text
-	);
 }
 
 add_action( 'admin_notices', 'hola_simpsons' );
 
+/**
+ * Print the inline stylesheet for the admin quote chrome.
+ *
+ * Inlined in `admin_head` rather than enqueued via wp_enqueue_style:
+ * the rule set is twenty lines and shipping it through the asset
+ * pipeline would 5x the plugin surface area for no practical benefit.
+ *
+ * @return void
+ */
 function hola_simpsons_css() {
 	echo "
 	<style type='text/css'>

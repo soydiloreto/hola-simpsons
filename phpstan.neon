@@ -1,0 +1,32 @@
+# PHPStan configuration for hola-simpsons.
+#
+# Level 8 (max strictness) on the production code. The WordPress
+# extension (szepeviktor/phpstan-wordpress) is auto-registered via the
+# phpstan/extension-installer composer plugin — no manual `includes:`
+# needed for it.
+
+parameters:
+  level: 8
+
+  paths:
+    - hola-simpsons.php
+
+  excludePaths:
+    analyse:
+      - tests/*
+      - vendor/*
+      - node_modules/*
+      - .wordpress-org/*
+
+  # The plugin's runtime minimum is PHP 7.0 (see Requires PHP in
+  # hola-simpsons.php and readme.txt). PHPCS's PHPCompatibility ruleset
+  # validates the cross-version compatibility surface against 7.0+;
+  # PHPStan only accepts 7.1+ so we set the minimum it allows. The
+  # surface area between 7.0 and 7.1 (no nullable types, no void return,
+  # no class-constant visibility) is already enforced by PHPCompatibilityWP.
+  phpVersion: 70100
+
+  # WP_DEBUG flips per-deployment from wp-config.php. Mark it dynamic
+  # so PHPStan does not collapse `if ( WP_DEBUG )` into a constant.
+  dynamicConstantNames:
+    - WP_DEBUG
