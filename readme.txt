@@ -4,7 +4,7 @@ Donate link: https://pablodiloreto.com/hola-simpsons/
 Tags: los-simpsons, the-simpsons, quotes, frases, hola-simpsons
 Requires at least: 5.1.2
 Tested up to: 6.9
-Stable tag: 1.3.2
+Stable tag: 1.4.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -87,6 +87,12 @@ WordPress SVN upgrade testing.
 Initial source code.
 
 == Changelog ==
+
+= 1.4.0 (2026-05-04) =
+* Hardened output: quote text now passes through `esc_html`, so any future contributed quote that contains markup is rendered safely. Defense-in-depth even though current quote data is in-file constants.
+* Switched the random-quote picker from `mt_rand` to `wp_rand` for better entropy and consistency with WordPress conventions.
+* Plugin header now declares `License: GPLv2 or later` and a direct-file-access guard, satisfying WordPress Plugin Check.
+* Internal: full developer-experience stack added — CI matrix on PHP 7.0–8.3, PHPCS (WordPress Coding Standards), PHPStan level 8, Psalm taint analysis, PHPUnit (12 unit tests), WP-CLI i18n validation, and tag-format/triple-version-alignment checks at deploy time. No runtime behaviour changes from this stack.
 
 = 1.3.2 (2026-04-28) =
 * Added iconic quote sets from the original English, European Spanish, Brazilian Portuguese, and Italian dubs of The Simpsons.
