@@ -4,7 +4,7 @@
  * Plugin URI: https://pablodiloreto.com/hola-simpsons/
  * Description: The best quotes from 'The Simpsons' in your WordPress Admin area. Las mejores frases de 'Los Simspons' en tu administrador de WordPress.
  * Author: Pablo Ariel Di Loreto
- * Version: 1.3.2
+ * Version: 1.4.0
  * Requires at least: 5.1.2
  * Requires PHP: 7.0
  * Tested up to: 6.9
